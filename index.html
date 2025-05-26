@@ -11,5 +11,26 @@
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b11a2f366cdc489e8b6546924a006943"}'></script>
   <!-- End Cloudflare Web Analytics -->
+
+
+  <script>
+  async function logToSheet() {
+    const ipRes = await fetch('https://api.ipify.org?format=json');
+    const ip = (await ipRes.json()).ip;
+
+    const geoRes = await fetch(`https://ipapi.co/${ip}/json/`);
+    const geo = await geoRes.json();
+
+    const ua = navigator.userAgent;
+    const id = new URLSearchParams(window.location.search).get("id") || "no_id";
+
+    const url = `https://script.google.com/macros/s/AKfycbxjTAUfmoT-xNcOmmry9etmbXQR5_BAVZdYonxrqM3IZ-3gxkXzAfMxFkjFITiSrEb70w/exec` +
+                `?ip=${ip}&ua=${encodeURIComponent(ua)}&id=${id}&country=${geo.country_name}&city=${geo.city}`;
+    fetch(url).catch(console.error);
+  }
+
+  logToSheet();
+</script>
+
 </body>
 </html>
